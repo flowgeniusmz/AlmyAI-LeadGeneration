@@ -1,0 +1,10 @@
+streamlit
+openai
+bs4
+requests
+pandas
+hydralit_components
+streamlit_elements
+extra-streamlit-components
+streamlit-extras
+pip install tavily-python
