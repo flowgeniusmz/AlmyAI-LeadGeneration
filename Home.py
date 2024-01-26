@@ -28,6 +28,20 @@ thread = client.beta.threads.create()
 threadid = thread.id
 
 
+def TavilyCompanySearch(varCompanyURL):
+    # Create an instance of TavilyClient
+    tavily_client = TavilyClient(api_key=st.secrets.tavily.api_key)
+
+    # Call get_company_info on the instance
+    searchresults = tavily_client.get_company_info(
+        query=varCompanyURL,
+        search_depth="advanced",
+        max_results=10,
+    )
+    
+    return searchresults
+
+
 #1. Function Setup
 def get_query(varZipCode):
     prompt_query = f"beauty clinics OR medical spas OR dermatologists OR cosmetic surgeons near {varZipCode} specializing in aesthetic treatments OR laser therapy contact information"
@@ -93,6 +107,7 @@ if "assistant" not in st.session_state:
         }
     )
 
+
 # If the run is completed, display the messages
 elif hasattr(st.session_state.run, 'status') and st.session_state.run.status == "completed":
     # Retrieve the list of messages
@@ -132,6 +147,9 @@ elif hasattr(st.session_state.run, 'status') and st.session_state.run.status == 
                     message_text = content_part.text.value
                     st.markdown(message_text)
 
+
+#st.selectbox("Cateogory", options=["Medspa", "Derm"])
+
 if prompt := st.chat_input("Enter a zip code to start"):
     with st.chat_message('user'):
         st.write(prompt)
@@ -141,7 +159,7 @@ if prompt := st.chat_input("Enter a zip code to start"):
     msgs = []
     fileids = []
     for url in urllist:
-        webdata = get_webscrape(url)
+        webdata = TavilyCompanySearch(url)
 
         # Save the web data to a text file
         file_name = f"webdata_{uuid.uuid4()}.txt"
